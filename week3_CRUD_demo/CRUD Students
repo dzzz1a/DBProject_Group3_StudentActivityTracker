@@ -1,0 +1,38 @@
+--Create
+
+function createStudent($first, $last, $year, $email, $pass, $address, $phone) {
+    $db = db();
+    $sql = "INSERT INTO students (studentFirstName, studentLastName, studentYear, studentEmail, studentPassword, studentAddress, phoneNumber)
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param("ssisssi", $first, $last, $year, $email, $pass, $address, $phone);
+    return $stmt->execute();
+}
+
+--Read
+
+function getAllStudents() {
+    $db = db();
+    return $db->query("SELECT * FROM students");
+}
+
+--Update 
+
+function updateStudent($id, $first, $last, $year, $email, $pass, $address, $phone) {
+    $db = db();
+    $sql = "UPDATE students SET studentFirstName=?, studentLastName=?, studentYear=?, 
+            studentEmail=?, studentPassword=?, studentAddress=?, phoneNumber=?
+            WHERE studentID=?";
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param("ssisssii", $first, $last, $year, $email, $pass, $address, $phone, $id);
+    return $stmt->execute();
+}
+
+--Delete
+
+function deleteStudent($id) {
+    $db = db();
+    $stmt = $db->prepare("DELETE FROM students WHERE studentID=?");
+    $stmt->bind_param("i", $id);
+    return $stmt->execute();
+}
