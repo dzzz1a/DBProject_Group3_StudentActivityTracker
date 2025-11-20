@@ -1,0 +1,15 @@
+-- CREATE
+INSERT INTO Extracurricular (activityName, activityCategory, activityLocation, activityStartDate, activityEndDate, activityFrequency, activityDetails)
+VALUES ('Basketball Club', 'Sports', 'Campus Gym', '2025-01-10', '2025-06-20', 'Weekly', 'Team practices and competitions');
+
+-- READ
+SELECT * FROM Extracurricular;
+
+-- UPDATE
+UPDATE Extracurricular
+SET activityLocation = 'Main Sports Hall'
+WHERE activityID = 1;
+
+-- DELETE
+DELETE FROM Extracurricular
+WHERE activityID = 1;
