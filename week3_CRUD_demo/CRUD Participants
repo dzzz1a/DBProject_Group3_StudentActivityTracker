@@ -1,0 +1,24 @@
+-- CREATE
+INSERT INTO Participation (studentID, activityID, dateApplied, applicationStatus, advisorID)
+VALUES (1, 1, '2025-02-01', 'Pending', 1);
+
+-- READ
+SELECT 
+    p.participationID,
+    s.studentFirstName,
+    a.activityName,
+    p.applicationStatus
+FROM Participation p
+JOIN Students s ON p.studentID = s.studentID
+JOIN Extracurricular a ON p.activityID = a.activityID;
+
+-- UPDATE (approve)
+UPDATE Participation
+SET applicationStatus = 'Approved',
+    approvalDate = CURRENT_DATE,
+    advisorFeedback = 'Strong motivation'
+WHERE participationID = 1;
+
+-- DELETE
+DELETE FROM Participation
+WHERE participationID = 1;
