@@ -1,0 +1,15 @@
+-- CREATE
+INSERT INTO Advisor (advisorName, advisorEmail, advisorRole, officeLocation, availableSchedule, advisorPassword)
+VALUES ('Rani M.', 'rani@campus.ac.id', 'Activity Supervisor', 'Building B-201', 'Mon–Fri 10:00–12:00', 'securepass');
+
+-- READ
+SELECT * FROM Advisor;
+
+-- UPDATE
+UPDATE Advisor
+SET officeLocation = 'Building B-305'
+WHERE advisorID = 1;
+
+-- DELETE
+DELETE FROM Advisor
+WHERE advisorID = 1;
