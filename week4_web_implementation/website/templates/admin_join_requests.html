@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Join Requests</h2>
+
+<table class="table">
+  <tr>
+    <th>ID</th>
+    <th>Student</th>
+    <th>Activity</th>
+    <th>Advisor</th</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+
+  {% for r in requests %}
+  <tr>
+    <td>{{ r.joinRequestID }}</td>
+    <td>{{ r.student.display_name }}</td>
+    <td>{{ r.activity.activityName }}</td>
+    <td>{{ r.advisor.advisorName }}</td>
+    <td>{{ r.status }}</td>
+    <td>
+      <form method="POST" action="{{ url_for('admin.update_join_request', id=r.joinRequestID) }}">
+        <select name="status" class="form-select form-select-sm">
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approve</option>
+          <option value="Rejected">Reject</option>
+        </select>
+        <button class="btn btn-sm btn-primary mt-1">Save</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

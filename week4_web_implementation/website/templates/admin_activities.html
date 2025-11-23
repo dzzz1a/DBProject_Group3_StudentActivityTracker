@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin - Activities</h2>
+<a class="btn btn-sm btn-success mb-3" href="{{ url_for('admin.activities_add') }}">Add Activity</a>
+<table class="table table-striped">
+  <thead>
+    <tr><th>ID</th><th>Name</th><th>Category</th><th>Location</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+  {% for a in activities %}
+    <tr>
+      <td>{{ a.activityID }}</td>
+      <td>{{ a.activityName }}</td>
+      <td>{{ a.activityCategory }}</td>
+      <td>{{ a.activityLocation }}</td>
+      <td>
+        <a class="btn btn-sm btn-primary" href="{{ url_for('admin.activities_edit', id=a.activityID) }}">Edit</a>
+        <a class="btn btn-sm btn-danger" href="{{ url_for('admin.activities_delete', id=a.activityID) }}">Delete</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

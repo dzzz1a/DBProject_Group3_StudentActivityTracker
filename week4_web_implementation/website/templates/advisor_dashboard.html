@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Advisor Dashboard</h2>
+
+<h3>Student Participation Requests</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Student</th>
+            <th>Activity</th>
+            <th>Status</th>
+            <th>Feedback</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in participations %}
+        <tr>
+            <td>{{ p.participationID }}</td>
+            <td>{{ p.student.studentFirstName }} {{ p.student.studentLastName }}</td>
+            <td>{{ p.activity.activityName }}</td>
+            <td>{{ p.applicationStatus }}</td>
+            <td>{{ p.advisorFeedback if p.advisorFeedback else "-" }}</td>
+
+            <td>
+
+                <form action="{{ url_for('advisor.update_participation', id=p.participationID) }}" method="POST">
+
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="Pending" {% if p.applicationStatus=='Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Approved" {% if p.applicationStatus=='Approved' %}selected{% endif %}>Approved</option>
+                        <option value="Rejected" {% if p.applicationStatus=='Rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+
+                    <input class="form-control form-control-sm mt-1"
+                           type="text"
+                           name="feedback"
+                           placeholder="Enter feedback"
+                           value="{{ p.advisorFeedback }}">
+
+                    <button class="btn btn-primary btn-sm mt-1" type="submit">Save</button>
+                </form>
+
+                <a href="{{ url_for('advisor.delete_participation', id=p.participationID) }}"
+                   class="btn btn-danger btn-sm mt-1">
+                   Delete
+                </a>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

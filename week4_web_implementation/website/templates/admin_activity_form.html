@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>{{ 'Edit Activity' if activity else 'Add Activity' }}</h2>
+
+<form method="POST" class="mt-4">
+
+    <div class="mb-3">
+        <label class="form-label">Activity Name</label>
+        <input type="text" name="name" class="form-control"
+               value="{{ activity.activityName if activity else '' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Category</label>
+        <input type="text" name="category" class="form-control"
+               value="{{ activity.activityCategory if activity else '' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Location</label>
+        <input type="text" name="location" class="form-control"
+               value="{{ activity.activityLocation if activity else '' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Details</label>
+        <textarea name="details" class="form-control" rows="3">{{ activity.activityDetails if activity else '' }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Start Date</label>
+        <input type="date" name="start_date" class="form-control"
+               value="{{ activity.activityStartDate }}" >
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">End Date</label>
+        <input type="date" name="end_date" class="form-control"
+               value="{{ activity.activityEndDate }}" >
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Frequency</label>
+        <input type="text" name="frequency" class="form-control"
+               value="{{ activity.activityFrequency if activity else '' }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{{ url_for('admin.activities_list') }}" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% endblock %}

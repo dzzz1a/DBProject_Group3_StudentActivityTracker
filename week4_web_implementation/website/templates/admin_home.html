@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<div class="list-group">
+  <a href="{{ url_for('admin.students_list') }}" class="list-group-item list-group-item-action">Manage Students</a>
+  <a href="{{ url_for('admin.advisors_list') }}" class="list-group-item list-group-item-action">Manage Advisors</a>
+  <a href="{{ url_for('admin.activities_list') }}" class="list-group-item list-group-item-action">Manage Activities</a>
+  <a href="{{ url_for('admin.participations_list') }}" class="list-group-item list-group-item-action">Manage Participations</a>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+
+<a href="{{ url_for('views.activities') }}" class="btn btn-primary mb-3">
+    View All Activities
+</a>
+
+<h4 class="mt-4">Joined Activities</h4>
+<ul class="list-group mb-4">
+  {% for a in joined %}
+  <li class="list-group-item">
+    <strong>{{ a.activityName }}</strong> – {{ a.activityLocation }}
+  </li>
+  {% else %}
+  <li class="list-group-item">You haven't joined any activity yet.</li>
+  {% endfor %}
+</ul>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Student Dashboard</h2>
+    <a href="{{ url_for('views.profile') }}" class="btn btn-primary">
+        Edit Profile
+    </a>
+</div>
+{% if joined|length > 0 %}
+    <ul>
+        {% for act in joined %}
+            <li>{{ act.activityName }} ({{ act.activityCategory }})</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="alert alert-secondary">You haven't joined any activity yet.</div>
+{% endif %}
+<h4>Participation Requests</h4>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Activity</th>
+      <th>Status</th>
+      <th>Feedback</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for p in participations %}
+    <tr>
+      <td>{{ p.participationID }}</td>
+      <td>{{ p.activity.activityName if p.activity else "-" }}</td>
+      <td>{{ p.applicationStatus }}</td>
+      <td>{{ p.advisorFeedback or "-" }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="4">No participation requests yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

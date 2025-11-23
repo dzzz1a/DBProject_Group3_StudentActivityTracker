@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ 'Edit' if advisor else 'Add' }} Advisor</h2>
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Name</label>
+    <input name="name" class="form-control" value="{{ advisor.advisorName if advisor else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input name="email" type="email" class="form-control" value="{{ advisor.advisorEmail if advisor else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Role</label>
+    <input name="role" class="form-control" value="{{ advisor.advisorRole if advisor else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Available Schedule</label>
+    <input name="schedule" class="form-control" value="{{ advisor.availableSchedule if advisor else '' }}">
+  </div>
+  <button class="btn btn-primary">Save</button>
+</form>
+{% endblock %}

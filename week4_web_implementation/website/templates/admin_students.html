@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin - Students</h2>
+<a class="btn btn-sm btn-success mb-3" href="{{ url_for('admin.students_add') }}">Add Student</a>
+<table class="table table-striped">
+  <thead>
+    <tr><th>ID</th><th>Name</th><th>Email</th><th>Year</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+  {% for s in students %}
+    <tr>
+      <td>{{ s.studentID }}</td>
+      <td>{{ s.studentFirstName }} {{ s.studentLastName }}</td>
+      <td>{{ s.studentEmail }}</td>
+      <td>{{ s.studentYear or '-' }}</td>
+      <td>
+        <a class="btn btn-sm btn-primary" href="{{ url_for('admin.students_edit', id=s.studentID) }}">Edit</a>
+        <a class="btn btn-sm btn-danger" href="{{ url_for('admin.students_delete', id=s.studentID) }}">Delete</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

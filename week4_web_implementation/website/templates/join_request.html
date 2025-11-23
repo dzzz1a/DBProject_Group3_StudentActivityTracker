@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Request to Join Activity</h2>
+
+<p><strong>Activity:</strong> {{ activity.activityName }}</p>
+
+<form method="POST">
+  <label>Select Advisor</label>
+  <select name="advisor_id" class="form-select mb-3" required>
+    {% for a in advisors %}
+      <option value="{{ a.advisorID }}">{{ a.advisorName }}</option>
+    {% endfor %}
+  </select>
+
+  <button class="btn btn-primary">Submit Request</button>
+</form>
+
+{% endblock %}

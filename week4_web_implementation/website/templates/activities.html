@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">Available Activities</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Details</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Frequency</th>
+            <th>Advisor</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for a in activities %}
+        <tr>
+            <td>{{ a.activityID }}</td>
+            <td>{{ a.activityName }}</td>
+            <td>{{ a.activityCategory }}</td>
+            <td>{{ a.activityLocation }}</td>
+            <td>{{ a.activityDetails }}</td>
+            <td>{{ a.activityStartDate }}</td>
+            <td>{{ a.activityEndDate }}</td>
+            <td>{{ a.activityFrequency }}</td>
+            <td>{{ a.advisor.advisorName if a.advisor else '-' }}</td>
+            <td>
+                <a href="{{ url_for('views.participate', activity_id=a.activityID) }}"
+                   class="btn btn-primary btn-sm">
+                    Request Participation
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

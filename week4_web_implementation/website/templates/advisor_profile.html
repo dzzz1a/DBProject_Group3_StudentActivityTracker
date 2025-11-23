@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Advisor Profile</h2>
+
+<form method="POST" class="mt-3">
+  <div class="mb-3">
+    <label class="form-label">Name</label>
+    <input type="text" name="name" class="form-control"
+           value="{{ current_user.advisorName }}">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control"
+           value="{{ current_user.advisorEmail }}">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Role</label>
+    <input type="text" name="role" class="form-control"
+           value="{{ current_user.advisorRole }}">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Available Schedule</label>
+    <textarea name="schedule" class="form-control" rows="3">{{ current_user.availableSchedule }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">New Password (leave blank to keep current)</label>
+    <input type="password" name="password" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+{% endblock %}
