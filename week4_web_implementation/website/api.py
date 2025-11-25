@@ -290,3 +290,24 @@ def api_update_participation(user_id, pid):
 
     db.session.commit()
     return jsonify({"message": "Participation updated"})
+
+@api.route("/students/<int:student_id>/activities", methods=["GET"])
+@token_required
+def api_student_activity_history(user_id, student_id):
+    participations = Participation.query.filter_by(studentID=student_id).all()
+
+    data = []
+    for p in participations:
+        activity = Activity.query.get(p.activityID)
+        data.append({
+            "participationID": p.participationID,
+            "activityID": activity.activityID,
+            "activityName": activity.activityName,
+            "category": activity.activityCategory,
+            "location": activity.activityLocation,
+            "dateApplied": p.dateApplied,
+            "status": p.applicationStatus
+        })
+
+    return jsonify({"history": data}), 200
+
