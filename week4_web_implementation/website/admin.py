@@ -161,7 +161,7 @@ def activities_add():
         flash("Activity added.", "success")
         return redirect(url_for("admin.activities_list"))
 
-    return render_template("admin_activity_form.html")
+    return render_template("admin_activity_form.html", activity=None)
 
 
 @admin.route("/activities/edit/<int:id>", methods=["GET", "POST"])
