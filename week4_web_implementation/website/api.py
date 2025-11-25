@@ -8,6 +8,11 @@ from . import db
 
 api = Blueprint("api", __name__)
 
+
+# ======================================================================
+# Helpers: JWT
+# ======================================================================
+
 def create_token(user):
     payload = {
         "sub": user.studentID,
@@ -18,33 +23,58 @@ def create_token(user):
     # PyJWT >= 2 returns str already
     return token
 
+
 def token_required(f):
     from functools import wraps
+
     @wraps(f)
     def wrapper(*args, **kwargs):
         auth_header = request.headers.get("Authorization", "")
         parts = auth_header.split()
+
         if len(parts) != 2 or parts[0].lower() != "bearer":
             return jsonify({"error": "Missing or invalid token"}), 401
+
         token = parts[1]
         try:
-            payload = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
+            payload = jwt.decode(
+                token,
+                current_app.config["SECRET_KEY"],
+                algorithms=["HS256"],
+            )
             user_id = payload["sub"]
-        except Exception as e:
+        except Exception:
             return jsonify({"error": "Token invalid"}), 401
+
         return f(user_id, *args, **kwargs)
+
     return wrapper
+
+
+# ======================================================================
+# Auth
+# ======================================================================
 
 @api.route("/login", methods=["POST"])
 def api_login():
     data = request.get_json() or {}
     email = data.get("email")
     password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required"}), 400
+
     user = Students.query.filter_by(studentEmail=email).first()
     if not user or not check_password_hash(user.studentPassword, password):
         return jsonify({"error": "Invalid credentials"}), 401
+
     token = create_token(user)
     return jsonify({"token": token})
+
+
+# ======================================================================
+# Students
+# ======================================================================
 
 @api.route("/students", methods=["GET"])
 @token_required
@@ -61,6 +91,11 @@ def api_students_list(user_id):
     ]
     return jsonify(result)
 
+
+# ======================================================================
+# Activities (LIST + CRUD + SEARCH)
+# ======================================================================
+
 @api.route("/activities", methods=["GET"])
 @token_required
 def api_activities_list(user_id):
@@ -76,6 +111,111 @@ def api_activities_list(user_id):
     ]
     return jsonify(result)
 
+
+@api.route("/activities/<int:activity_id>", methods=["GET"])
+@token_required
+def api_activity_detail(user_id, activity_id):
+    a = Activity.query.get_or_404(activity_id)
+    return jsonify(
+        {
+            "activityID": a.activityID,
+            "name": a.activityName,
+            "category": a.activityCategory,
+            "location": a.activityLocation,
+            "details": a.activityDetails,
+            "startDate": a.activityStartDate,
+            "endDate": a.activityEndDate,
+            "frequency": a.activityFrequency,
+            "advisorID": a.advisorID,
+        }
+    )
+
+
+@api.route("/activities", methods=["POST"])
+@token_required
+def api_create_activity(user_id):
+    data = request.get_json() or {}
+
+    # minimal validation; adjust as needed
+    if not data.get("name"):
+        return jsonify({"error": "Activity name is required"}), 400
+
+    a = Activity(
+        activityName=data.get("name"),
+        activityCategory=data.get("category"),
+        activityLocation=data.get("location"),
+        activityDetails=data.get("details"),
+        activityStartDate=data.get("startDate"),
+        activityEndDate=data.get("endDate"),
+        activityFrequency=data.get("frequency"),
+        advisorID=data.get("advisorID"),
+    )
+
+    db.session.add(a)
+    db.session.commit()
+
+    return jsonify(
+        {"message": "Activity created", "activityID": a.activityID}
+    ), 201
+
+
+@api.route("/activities/<int:activity_id>", methods=["PUT"])
+@token_required
+def api_update_activity(user_id, activity_id):
+    data = request.get_json() or {}
+    a = Activity.query.get_or_404(activity_id)
+
+    a.activityName = data.get("name", a.activityName)
+    a.activityCategory = data.get("category", a.activityCategory)
+    a.activityLocation = data.get("location", a.activityLocation)
+    a.activityDetails = data.get("details", a.activityDetails)
+    a.activityStartDate = data.get("startDate", a.activityStartDate)
+    a.activityEndDate = data.get("endDate", a.activityEndDate)
+    a.activityFrequency = data.get("frequency", a.activityFrequency)
+    a.advisorID = data.get("advisorID", a.advisorID)
+
+    db.session.commit()
+    return jsonify({"message": "Activity updated"})
+
+
+@api.route("/activities/<int:activity_id>", methods=["DELETE"])
+@token_required
+def api_delete_activity(user_id, activity_id):
+    a = Activity.query.get_or_404(activity_id)
+    db.session.delete(a)
+    db.session.commit()
+    return jsonify({"message": "Activity deleted"})
+
+
+@api.route("/activities/search", methods=["GET"])
+@token_required
+def api_search_activities(user_id):
+    keyword = request.args.get("keyword", "").strip()
+
+    if not keyword:
+        # if no keyword, just return all activities (or empty list if you prefer)
+        activities = Activity.query.all()
+    else:
+        activities = Activity.query.filter(
+            Activity.activityName.ilike(f"%{keyword}%")
+        ).all()
+
+    result = [
+        {
+            "activityID": a.activityID,
+            "name": a.activityName,
+            "category": a.activityCategory,
+            "location": a.activityLocation,
+        }
+        for a in activities
+    ]
+    return jsonify(result)
+
+
+# ======================================================================
+# Participations (LIST + CREATE + UPDATE)
+# ======================================================================
+
 @api.route("/participations", methods=["GET"])
 @token_required
 def api_participations_list(user_id):
@@ -86,7 +226,67 @@ def api_participations_list(user_id):
             "activityID": p.activityID,
             "status": p.applicationStatus,
             "feedback": p.advisorFeedback,
+            "achievements": p.achievements,
+            "dateApplied": p.dateApplied,
+            "approvalDate": p.approvalDate,
+            "advisorID": p.advisorID,
         }
         for p in parts
     ]
     return jsonify(result)
+
+
+@api.route("/participations", methods=["POST"])
+@token_required
+def api_create_participation(user_id):
+    data = request.get_json() or {}
+
+    if not data.get("activityID"):
+        return jsonify({"error": "activityID is required"}), 400
+
+    participation = Participation(
+        studentID=user_id,
+        activityID=data.get("activityID"),
+        advisorID=data.get("advisorID"),
+        dateApplied=datetime.utcnow(),
+        applicationStatus="Pending",
+        advisorFeedback=None,
+        achievements=None,
+    )
+
+    db.session.add(participation)
+    db.session.commit()
+
+    return jsonify(
+        {
+            "message": "Participation submitted",
+            "participationID": participation.participationID,
+        }
+    ), 201
+
+
+@api.route("/participations/<int:pid>", methods=["PUT"])
+@token_required
+def api_update_participation(user_id, pid):
+    data = request.get_json() or {}
+    p = Participation.query.get_or_404(pid)
+
+    # basic fields an advisor / system can update
+    status = data.get("status")
+    if status is not None:
+        p.applicationStatus = status
+        if status == "Approved":
+            p.approvalDate = datetime.utcnow()
+        elif status == "Rejected":
+            p.approvalDate = datetime.utcnow()
+        else:
+            p.approvalDate = None
+
+    if "feedback" in data:
+        p.advisorFeedback = data.get("feedback")
+
+    if "achievements" in data:
+        p.achievements = data.get("achievements")
+
+    db.session.commit()
+    return jsonify({"message": "Participation updated"})
