@@ -7,30 +7,25 @@
     <label class="form-label">Name</label>
     <input name="name" class="form-control" required>
   </div>
-
   <div class="mb-3">
     <label class="form-label">Email</label>
     <input name="email" type="email" class="form-control" required>
   </div>
-
   <div class="mb-3">
-    <label class="form-label">Role / Position</label>
-    
-    <select name="role" class="form-control">
+  <label class="form-label">Role / Position</label>
+  <select name="role" class="form-control" required>
       <option value="">-- Select Role --</option>
-      <option value="Advisor">Advisor</option>
-      <option value="Coordinator">Coordinator</option>
-      <option value="Club Supervisor">Club Supervisor</option>
-      <option value="Department Head">Department Head</option>
-    </select>
-
+      <option value="Club Advisor">Club Advisor</option>
+      <option value="Faculty Advisor">Faculty Advisor</option>
+      <option value="Teacher">Teacher</option>
+      <option value="Coach">Coach</option>
+  </select>
   </div>
-
   <div class="mb-3">
     <label class="form-label">Password</label>
     <input name="password" type="password" class="form-control" required>
   </div>
-
   <button class="btn btn-primary">Submit</button>
 </form>
 {% endblock %}
+
