@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">Activity History</h2>
+
+<form method="get" class="mb-3 d-flex" role="search">
+    <input 
+        type="text"
+        name="q"
+        class="form-control me-2"
+        placeholder="Search by activity name..."
+        value="{{ search_query }}"
+    >
+    <button class="btn btn-primary" type="submit">Search</button>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Participation ID</th>
+            <th>Activity Name</th>
+            <th>Status</th>
+            <th>Date Applied</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for p in participations %}
+        <tr>
+            <td>{{ p.participationID }}</td>
+            <td>{{ p.activity.activityName }}</td>
+            <td>{{ p.applicationStatus }}</td>
+            <td>{{ p.dateApplied }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="4" class="text-center">No activities found.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
