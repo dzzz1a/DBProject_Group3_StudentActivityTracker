@@ -384,3 +384,73 @@ def api_delete_participation(user_id, pid):
     db.session.commit()
     return jsonify({"message": "Participation deleted"})
 
+# ======================================================================
+# Advisors (CREATE, READ, UPDATE, DELETE)
+# ======================================================================
+
+@api.route("/advisors", methods=["POST"])
+@token_required
+def api_create_advisor(user_id):
+    data = request.get_json() or {}
+    required_fields = ["name", "email", "role", "officeLocation", "availableSchedule", "password"]
+    for field in required_fields:
+        if not data.get(field):
+            return jsonify({"error": f"{field} is required"}), 400
+
+    advisor = Advisor(
+        advisorName=data.get("name"),
+        advisorEmail=data.get("email"),
+        advisorRole=data.get("role"),
+        officeLocation=data.get("officeLocation"),
+        availableSchedule=data.get("availableSchedule"),
+        advisorPassword=data.get("password")  # consider hashing
+    )
+
+    db.session.add(advisor)
+    db.session.commit()
+    return jsonify({"message": "Advisor created", "advisorID": advisor.advisorID}), 201
+
+
+@api.route("/advisors", methods=["GET"])
+@token_required
+def api_list_advisors(user_id):
+    advisors = Advisor.query.all()
+    result = [
+        {
+            "advisorID": a.advisorID,
+            "name": a.advisorName,
+            "email": a.advisorEmail,
+            "role": a.advisorRole,
+            "officeLocation": a.officeLocation,
+            "schedule": a.availableSchedule
+        }
+        for a in advisors
+    ]
+    return jsonify(result)
+
+
+@api.route("/advisors/<int:advisor_id>", methods=["PUT"])
+@token_required
+def api_update_advisor(user_id, advisor_id):
+    advisor = Advisor.query.get_or_404(advisor_id)
+    data = request.get_json() or {}
+
+    advisor.advisorName = data.get("name", advisor.advisorName)
+    advisor.advisorEmail = data.get("email", advisor.advisorEmail)
+    advisor.advisorRole = data.get("role", advisor.advisorRole)
+    advisor.officeLocation = data.get("officeLocation", advisor.officeLocation)
+    advisor.availableSchedule = data.get("availableSchedule", advisor.availableSchedule)
+    advisor.advisorPassword = data.get("password", advisor.advisorPassword)  # consider hashing
+
+    db.session.commit()
+    return jsonify({"message": "Advisor updated"})
+
+
+@api.route("/advisors/<int:advisor_id>", methods=["DELETE"])
+@token_required
+def api_delete_advisor(user_id, advisor_id):
+    advisor = Advisor.query.get_or_404(advisor_id)
+    db.session.delete(advisor)
+    db.session.commit()
+    return jsonify({"message": "Advisor deleted"})
+
