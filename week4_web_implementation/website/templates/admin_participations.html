@@ -1,38 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Admin / Advisor - Participation Requests</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Student</th>
-      <th>Activity</th>
-      <th>Status</th>
-      <th>Feedback</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for p in participations %}
-    <tr>
-      <td>{{ p.participationID }}</td>
-      <td>{{ p.student.studentFirstName }} {{ p.student.studentLastName }}</td>
-      <td>{{ p.activity.activityName if p.activity else '-' }}</td>
-      <td>{{ p.applicationStatus }}</td>
-      <td>{{ p.advisorFeedback or '-' }}</td>
-      <td>
-        <form method="POST" action="{{ url_for('admin.participations_update', id=p.participationID) }}">
-          <select name="status" class="form-select form-select-sm mb-1">
-            <option value="Pending" {% if p.applicationStatus == 'Pending' %}selected{% endif %}>Pending</option>
-            <option value="Approved" {% if p.applicationStatus == 'Approved' %}selected{% endif %}>Approved</option>
-            <option value="Rejected" {% if p.applicationStatus == 'Rejected' %}selected{% endif %}>Rejected</option>
-          </select>
-          <input name="feedback" class="form-control form-control-sm mb-1" placeholder="Feedback" value="{{ p.advisorFeedback or '' }}">
-          <button class="btn btn-sm btn-primary">Save</button>
-        </form>
-      </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<div class="mb-4">
+    <h2>All Participation Requests</h2>
+    <p class="text-muted">Override status or view feedback for all students.</p>
+</div>
+
+<div class="ios-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th class="ps-4">Student</th>
+                    <th>Activity</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for p in participations %}
+                <tr>
+                    <td class="ps-4">
+                        <div class="fw-bold">{{ p.student.studentFirstName }} {{ p.student.studentLastName }}</div>
+                        <div class="small text-muted">ID: {{ p.studentID }}</div>
+                    </td>
+                    <td>{{ p.activity.activityName if p.activity else '-' }}</td>
+                    <td>
+                         <span class="badge-ios {% if p.applicationStatus=='Approved' %}bg-approved{% elif p.applicationStatus=='Rejected' %}bg-rejected{% else %}bg-pending{% endif %}">
+                            {{ p.applicationStatus }}
+                        </span>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.participations_update', id=p.participationID) }}" class="d-flex gap-2">
+                            <select name="status" class="form-select form-select-sm w-auto">
+                                <option value="Pending" {% if p.applicationStatus == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Approved" {% if p.applicationStatus == 'Approved' %}selected{% endif %}>Approved</option>
+                                <option value="Rejected" {% if p.applicationStatus == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                            <input name="feedback" class="form-control form-control-sm" placeholder="Feedback..." value="{{ p.advisorFeedback or '' }}">
+                            <button class="btn btn-sm btn-primary btn-ios">Save</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

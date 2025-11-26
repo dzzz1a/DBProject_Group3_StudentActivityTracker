@@ -1,24 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Admin - Activities</h2>
-<a class="btn btn-sm btn-success mb-3" href="{{ url_for('admin.activities_add') }}">Add Activity</a>
-<table class="table table-striped">
-  <thead>
-    <tr><th>ID</th><th>Name</th><th>Category</th><th>Location</th><th>Actions</th></tr>
-  </thead>
-  <tbody>
-  {% for a in activities %}
-    <tr>
-      <td>{{ a.activityID }}</td>
-      <td>{{ a.activityName }}</td>
-      <td>{{ a.activityCategory }}</td>
-      <td>{{ a.activityLocation }}</td>
-      <td>
-        <a class="btn btn-sm btn-primary" href="{{ url_for('admin.activities_edit', id=a.activityID) }}">Edit</a>
-        <a class="btn btn-sm btn-danger" href="{{ url_for('admin.activities_delete', id=a.activityID) }}">Delete</a>
-      </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Activities</h2>
+    <a class="btn btn-primary btn-ios" href="{{ url_for('admin.activities_add') }}">
+        <i class="bi bi-plus-lg me-1"></i> New Activity
+    </a>
+</div>
+
+<div class="ios-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th class="ps-4">Activity Name</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for a in activities %}
+                <tr>
+                    <td class="ps-4">
+                        <div class="fw-bold">{{ a.activityName }}</div>
+                        <div class="small text-muted">ID: {{ a.activityID }}</div>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark border rounded-pill fw-normal px-2">
+                            {{ a.activityCategory }}
+                        </span>
+                    </td>
+                    <td class="text-muted"><i class="bi bi-geo-alt me-1"></i>{{ a.activityLocation }}</td>
+                    <td class="text-end pe-4">
+                        <a href="{{ url_for('admin.activities_edit', id=a.activityID) }}" class="btn btn-sm btn-secondary btn-ios me-1">Edit</a>
+                        <a href="{{ url_for('admin.activities_delete', id=a.activityID) }}" class="btn btn-sm btn-danger btn-ios" onclick="return confirm('Delete this activity?');">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

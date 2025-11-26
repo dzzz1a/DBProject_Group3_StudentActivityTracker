@@ -1,17 +1,78 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Request Participation</h2>
-<p>Activity: <strong>{{ activity.activityName }}</strong></p>
-<form method="POST">
-  <div class="mb-3">
-    <label class="form-label">Advisor</label>
-    <select name="advisor_id" class="form-select">
-      <option value="">-- Select Advisor (optional) --</option>
-      {% for a in advisors %}
-      <option value="{{ a.advisorID }}">{{ a.advisorName }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  <button class="btn btn-primary">Submit Request</button>
-</form>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="ios-card" style="width: 100%; max-width: 500px;">
+        
+        <div class="text-center mb-4">
+            <div class="mb-3">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center" 
+                     style="width: 60px; height: 60px; font-size: 1.5rem;">
+                    <i class="bi bi-calendar-plus"></i>
+                </div>
+            </div>
+            <h2 class="mb-1">Request Participation</h2>
+            <p class="text-muted">Applying for <strong class="text-dark">{{ activity.activityName }}</strong></p>
+        </div>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Select an Advisor</label>
+                <select name="advisor_id" id="advisorSelect" class="form-select" required onchange="updateSchedule()">
+                    <option value="" disabled selected>Choose an advisor...</option>
+                    {% for a in advisors %}
+                        <option value="{{ a.advisorID }}" 
+                                data-schedule="{{ a.availableSchedule if a.availableSchedule else 'No schedule listed.' }}">
+                            {{ a.advisorName }}
+                        </option>
+                    {% else %}
+                        <option disabled>No approved advisors available</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="scheduleCard" class="bg-light rounded-3 p-3 mb-4 border d-none fade-in-up">
+                <div class="d-flex gap-3">
+                    <div class="text-muted"><i class="bi bi-clock-history"></i></div>
+                    <div>
+                        <div class="small fw-bold text-uppercase text-muted" style="font-size: 0.75rem;">Available Schedule</div>
+                        <div id="scheduleText" class="text-dark fw-medium mt-1">Select an advisor to see availability</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary btn-ios py-2">Submit Request</button>
+                <a href="{{ url_for('views.activities') }}" class="btn btn-secondary btn-ios py-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function updateSchedule() {
+        const select = document.getElementById('advisorSelect');
+        const card = document.getElementById('scheduleCard');
+        const text = document.getElementById('scheduleText');
+        
+        // Get the 'data-schedule' attribute from the selected option
+        const selectedOption = select.options[select.selectedIndex];
+        const schedule = selectedOption.getAttribute('data-schedule');
+
+        if (schedule) {
+            // Update text and show the card
+            text.textContent = schedule;
+            card.classList.remove('d-none');
+        } else {
+            card.classList.add('d-none');
+        }
+    }
+</script>
+
+<style>
+    .fade-in-up { animation: fadeUp 0.3s ease-out forwards; }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
 {% endblock %}

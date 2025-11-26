@@ -1,24 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Admin - Students</h2>
-<a class="btn btn-sm btn-success mb-3" href="{{ url_for('admin.students_add') }}">Add Student</a>
-<table class="table table-striped">
-  <thead>
-    <tr><th>ID</th><th>Name</th><th>Email</th><th>Year</th><th>Actions</th></tr>
-  </thead>
-  <tbody>
-  {% for s in students %}
-    <tr>
-      <td>{{ s.studentID }}</td>
-      <td>{{ s.studentFirstName }} {{ s.studentLastName }}</td>
-      <td>{{ s.studentEmail }}</td>
-      <td>{{ s.studentYear or '-' }}</td>
-      <td>
-        <a class="btn btn-sm btn-primary" href="{{ url_for('admin.students_edit', id=s.studentID) }}">Edit</a>
-        <a class="btn btn-sm btn-danger" href="{{ url_for('admin.students_delete', id=s.studentID) }}">Delete</a>
-      </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Students</h2>
+    <a class="btn btn-primary btn-ios" href="{{ url_for('admin.students_add') }}">
+        <i class="bi bi-plus-lg me-1"></i> Add Student
+    </a>
+</div>
+
+<div class="ios-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th class="ps-4">Name</th>
+                    <th>Email</th>
+                    <th>Year</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for s in students %}
+                <tr>
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:36px; height:36px; font-weight: bold; color: var(--text-muted);">
+                                {{ s.studentFirstName[0] }}{{ s.studentLastName[0] }}
+                            </div>
+                            <div>
+                                <div class="fw-bold">{{ s.studentFirstName }} {{ s.studentLastName }}</div>
+                                <div class="small text-muted">ID: {{ s.studentID }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ s.studentEmail }}</td>
+                    <td>{{ s.studentYear or '-' }}</td>
+                    <td class="text-end pe-4">
+                        <a href="{{ url_for('admin.students_edit', id=s.studentID) }}" class="btn btn-sm btn-secondary btn-ios me-1">Edit</a>
+                        <a href="{{ url_for('admin.students_delete', id=s.studentID) }}" class="btn btn-sm btn-danger btn-ios" onclick="return confirm('Delete this student?');">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

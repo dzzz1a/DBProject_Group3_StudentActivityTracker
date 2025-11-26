@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
 from datetime import date
+from sqlalchemy import or_  # <--- Added for search logic
 
 from .models import Activity, Participation, Advisor
 from . import db
@@ -62,7 +63,22 @@ def activities():
             return redirect(url_for("advisor.dashboard"))
         return redirect(url_for("auth.login"))
 
-    activities = Activity.query.all()
+    # --- SEARCH LOGIC START ---
+    search_query = request.args.get('q')
+
+    if search_query:
+        # Filter by Name OR Category OR Location
+        activities = Activity.query.filter(
+            or_(
+                Activity.activityName.ilike(f'%{search_query}%'),
+                Activity.activityCategory.ilike(f'%{search_query}%'),
+                Activity.activityLocation.ilike(f'%{search_query}%')
+            )
+        ).all()
+    else:
+        activities = Activity.query.all()
+    # --- SEARCH LOGIC END ---
+
     return render_template("activities.html", activities=activities)
 
 
@@ -71,7 +87,7 @@ def activities():
 @views.route("/participate/<int:activity_id>", methods=["GET", "POST"])
 @login_required
 def participate(activity_id):
-    # Students only
+    # 1. Role Check: Students only
     if getattr(current_user, "role_type", None) != "student":
         if getattr(current_user, "role_type", None) == "advisor":
             if getattr(current_user, "is_admin", False):
@@ -79,9 +95,25 @@ def participate(activity_id):
             return redirect(url_for("advisor.dashboard"))
         return redirect(url_for("auth.login"))
 
+    # 2. Check if Student is ALREADY applied or accepted
+    existing_participation = Participation.query.filter_by(
+        studentID=current_user.studentID,
+        activityID=activity_id
+    ).first()
+
+    if existing_participation:
+        if existing_participation.applicationStatus == 'Approved':
+            flash("You have already been accepted into this activity.", "info")
+            return redirect(url_for('views.dashboard'))
+        elif existing_participation.applicationStatus == 'Pending':
+            flash("You already have a pending request for this activity. Please wait for approval.", "warning")
+            return redirect(url_for('views.dashboard'))
+        # If 'Rejected', we allow them to apply again (optional)
+
     activity = Activity.query.get_or_404(activity_id)
-    advisors = Advisor.query.filter_by(status="Pending").all()
-    # NOTE: If you want only Approved advisors: change to status="Approved"
+    
+    # Show only Approved advisors
+    advisors = Advisor.query.filter_by(status="Approved").all()
 
     if request.method == "POST":
         advisor_id = request.form.get("advisor_id")

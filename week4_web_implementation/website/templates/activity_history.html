@@ -1,43 +1,92 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="mb-4">Activity History</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Activity History</h2>
+        <p class="text-muted">A record of all your past and current applications.</p>
+    </div>
 
-<form method="get" class="mb-3 d-flex" role="search">
-    <input 
-        type="text"
-        name="q"
-        class="form-control me-2"
-        placeholder="Search by activity name..."
-        value="{{ search_query }}"
-    >
-    <button class="btn btn-primary" type="submit">Search</button>
-</form>
+    <form class="d-none d-md-block" style="width: 320px;" method="GET" action="{{ url_for('views.activity_history') }}">
+        <div class="input-group shadow-sm rounded-pill bg-white overflow-hidden border-0" style="padding: 2px;">
+            <span class="input-group-text bg-white border-0 ps-3">
+                <i class="bi bi-search" style="color: var(--accent);"></i>
+            </span>
+            <input type="text" 
+                   name="q" 
+                   class="form-control border-0 shadow-none ps-2" 
+                   placeholder="Search history..." 
+                   value="{{ search_query }}"
+                   style="font-size: 0.95rem; background: transparent;">
+        </div>
+    </form>
+</div>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Participation ID</th>
-            <th>Activity Name</th>
-            <th>Status</th>
-            <th>Date Applied</th>
-        </tr>
-    </thead>
+<div class="ios-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th style="padding-left: 1.5rem;">Activity</th>
+                    <th>Date Applied</th>
+                    <th>Advisor</th>
+                    <th>Status</th>
+                    <th class="text-end" style="padding-right: 1.5rem;">Feedback</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for p in participations %}
+                <tr>
+                    <td style="padding-left: 1.5rem;">
+                        <div class="fw-bold">{{ p.activity.activityName }}</div>
+                        <div class="small text-muted" style="font-size: 0.75rem;">
+                            Ref: #{{ p.participationID }}
+                        </div>
+                    </td>
 
-    <tbody>
-    {% for p in participations %}
-        <tr>
-            <td>{{ p.participationID }}</td>
-            <td>{{ p.activity.activityName }}</td>
-            <td>{{ p.applicationStatus }}</td>
-            <td>{{ p.dateApplied }}</td>
-        </tr>
-    {% else %}
-        <tr>
-            <td colspan="4" class="text-center">No activities found.</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar3 text-muted" style="font-size: 0.85rem;"></i>
+                            <span>{{ p.dateApplied }}</span>
+                        </div>
+                    </td>
+
+                    <td>
+                        {% if p.advisor %}
+                            {{ p.advisor.advisorName }}
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <span class="badge-ios 
+                            {% if p.applicationStatus == 'Approved' %}bg-approved
+                            {% elif p.applicationStatus == 'Rejected' %}bg-rejected
+                            {% else %}bg-pending{% endif %}">
+                            {{ p.applicationStatus }}
+                        </span>
+                    </td>
+
+                    <td class="text-end" style="padding-right: 1.5rem;">
+                        {% if p.advisorFeedback %}
+                            <span class="text-dark small fst-italic">"{{ p.advisorFeedback }}"</span>
+                        {% else %}
+                            <span class="text-muted small">-</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">
+                        <i class="bi bi-clock-history display-6 mb-3 d-block" style="opacity: 0.3;"></i>
+                        No history found matching your search.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

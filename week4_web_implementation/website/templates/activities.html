@@ -1,45 +1,97 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="mb-4">Available Activities</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Available Activities</h2>
+        <p class="text-muted">Explore and join activities for this semester.</p>
+    </div>
+    
+    <form class="d-none d-md-block" style="width: 320px;" method="GET" action="{{ url_for('views.activities') }}">
+        <div class="input-group shadow-sm rounded-pill bg-white overflow-hidden border-0" style="padding: 2px;">
+            <span class="input-group-text bg-white border-0 ps-3">
+                <i class="bi bi-search" style="color: var(--accent);"></i>
+            </span>
+            <input type="text" 
+                   name="q" 
+                   class="form-control border-0 shadow-none ps-2" 
+                   placeholder="Search..." 
+                   value="{{ request.args.get('q', '') }}"
+                   style="font-size: 0.95rem; background: transparent;">
+        </div>
+    </form>
+</div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Location</th>
-            <th>Details</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Frequency</th>
-            <th>Advisor</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+<div class="ios-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th style="padding-left: 1.5rem;">Activity Name</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Schedule</th>
+                    <th>Advisor</th>
+                    <th class="text-end" style="padding-right: 1.5rem;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in activities %}
+                <tr>
+                    <td style="padding-left: 1.5rem;">
+                        <div class="fw-bold">{{ a.activityName }}</div>
+                        <div class="small text-muted" style="font-size: 0.75rem;">ID: #{{ a.activityID }}</div>
+                    </td>
+                    
+                    <td>
+                        <span class="badge bg-light text-dark border fw-normal px-2 py-1 rounded-pill">
+                            {{ a.activityCategory }}
+                        </span>
+                    </td>
+                    
+                    <td class="text-secondary">
+                        <i class="bi bi-geo-alt me-1"></i>{{ a.activityLocation }}
+                    </td>
+                    
+                    <td>
+                        <div class="small text-dark fw-medium">{{ a.activityFrequency }}</div>
+                        <div class="small text-muted" style="font-size: 0.75rem;">
+                            {{ a.activityStartDate }} — {{ a.activityEndDate }}
+                        </div>
+                    </td>
 
-    <tbody>
-        {% for a in activities %}
-        <tr>
-            <td>{{ a.activityID }}</td>
-            <td>{{ a.activityName }}</td>
-            <td>{{ a.activityCategory }}</td>
-            <td>{{ a.activityLocation }}</td>
-            <td>{{ a.activityDetails }}</td>
-            <td>{{ a.activityStartDate }}</td>
-            <td>{{ a.activityEndDate }}</td>
-            <td>{{ a.activityFrequency }}</td>
-            <td>{{ a.advisor.advisorName if a.advisor else '-' }}</td>
-            <td>
-                <a href="{{ url_for('views.participate', activity_id=a.activityID) }}"
-                   class="btn btn-primary btn-sm">
-                    Request Participation
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                    <td>
+                        {% if a.advisor %}
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" 
+                                 style="width: 28px; height: 28px; font-size: 0.75rem; font-weight: bold;">
+                                {{ a.advisor.advisorName[0] }}
+                            </div>
+                            <span class="small">{{ a.advisor.advisorName }}</span>
+                        </div>
+                        {% else %}
+                        <span class="text-muted small">-</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="text-end" style="padding-right: 1.5rem;">
+                        <a href="{{ url_for('views.participate', activity_id=a.activityID) }}" 
+                           class="btn btn-primary btn-ios btn-sm">
+                           Request
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center py-5 text-muted">
+                        <i class="bi bi-search display-6 mb-3 d-block" style="opacity: 0.3;"></i>
+                        No activities found matching your search.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

@@ -1,45 +1,57 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Admin - Advisors</h2>
+<div class="mb-4">
+    <h2>Manage Advisors</h2>
+</div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Role</th>
-      <th>Status</th>
-      <th>Admin?</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for a in advisors %}
-    <tr>
-      <td>{{ a.advisorID }}</td>
-      <td>{{ a.advisorName }}</td>
-      <td>{{ a.advisorEmail }}</td>
-      <td>{{ a.advisorRole }}</td>
-      <td>{{ a.status }}</td>
-      <td>{{ 'Yes' if a.is_admin else 'No' }}</td>
-      <td>
-        <form method="POST" action="{{ url_for('admin.advisors_update_status', id=a.advisorID) }}" class="d-flex gap-1">
-          <select name="status" class="form-select form-select-sm">
-            <option value="Pending"  {% if a.status == 'Pending' %}selected{% endif %}>Pending</option>
-            <option value="Approved" {% if a.status == 'Approved' %}selected{% endif %}>Approved</option>
-            <option value="Rejected" {% if a.status == 'Rejected' %}selected{% endif %}>Rejected</option>
-          </select>
-          <div class="form-check ms-2">
-            <input class="form-check-input" type="checkbox" name="make_admin" id="adm{{ a.advisorID }}" {% if a.is_admin %}checked{% endif %}>
-            <label class="form-check-label" for="adm{{ a.advisorID }}">Admin</label>
-          </div>
-          <button class="btn btn-sm btn-primary ms-2">Save</button>
-        </form>
-        <a href="{{ url_for('admin.advisors_delete', id=a.advisorID) }}" class="btn btn-sm btn-danger mt-1">Delete</a>
-      </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<div class="ios-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th class="ps-4">Advisor Info</th>
+                    <th>Role</th>
+                    <th>Current Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for a in advisors %}
+                <tr>
+                    <td class="ps-4">
+                        <div class="fw-bold">{{ a.advisorName }}</div>
+                        <div class="small text-muted">{{ a.advisorEmail }}</div>
+                    </td>
+                    <td>{{ a.advisorRole }}</td>
+                    <td>
+                        <span class="badge-ios {% if a.status=='Approved' %}bg-approved{% elif a.status=='Rejected' %}bg-rejected{% else %}bg-pending{% endif %}">
+                            {{ a.status }}
+                        </span>
+                        {% if a.is_admin %}
+                            <span class="badge bg-dark ms-1">Admin</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.advisors_update_status', id=a.advisorID) }}" class="d-flex align-items-center gap-2">
+                            <select name="status" class="form-select form-select-sm" style="width: 110px;">
+                                <option value="Pending"  {% if a.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Approved" {% if a.status == 'Approved' %}selected{% endif %}>Approve</option>
+                                <option value="Rejected" {% if a.status == 'Rejected' %}selected{% endif %}>Reject</option>
+                            </select>
+                            
+                            <div class="form-check form-switch pt-1">
+                                <input class="form-check-input" type="checkbox" name="make_admin" id="adm{{ a.advisorID }}" {% if a.is_admin %}checked{% endif %}>
+                                <label class="form-check-label small text-muted" for="adm{{ a.advisorID }}">Admin</label>
+                            </div>
+
+                            <button class="btn btn-sm btn-primary btn-ios ms-1">Save</button>
+                            <a href="{{ url_for('admin.advisors_delete', id=a.advisorID) }}" class="text-danger ms-2" onclick="return confirm('Delete user?');"><i class="bi bi-trash"></i></a>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

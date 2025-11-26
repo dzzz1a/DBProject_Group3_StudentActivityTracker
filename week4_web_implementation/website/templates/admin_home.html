@@ -1,11 +1,75 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Admin Dashboard</h2>
 
-<div class="list-group">
-  <a href="{{ url_for('admin.students_list') }}" class="list-group-item list-group-item-action">Manage Students</a>
-  <a href="{{ url_for('admin.advisors_list') }}" class="list-group-item list-group-item-action">Manage Advisors</a>
-  <a href="{{ url_for('admin.activities_list') }}" class="list-group-item list-group-item-action">Manage Activities</a>
-  <a href="{{ url_for('admin.participations_list') }}" class="list-group-item list-group-item-action">Manage Participations</a>
+<div class="mb-5">
+    <h2>Admin Dashboard</h2>
+    <p class="text-muted">Overview and management of the system.</p>
 </div>
+
+<div class="row g-4">
+    <div class="col-md-6 col-lg-6">
+        <a href="{{ url_for('admin.students_list') }}" class="text-decoration-none">
+            <div class="ios-card h-100 d-flex align-items-center gap-4 hover-lift">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; font-size: 1.75rem;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1 text-dark fw-bold">Students</h4>
+                    <p class="text-muted mb-0 small">Manage student accounts, years, and contact info.</p>
+                </div>
+                <div class="ms-auto text-muted"><i class="bi bi-chevron-right"></i></div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+        <a href="{{ url_for('admin.advisors_list') }}" class="text-decoration-none">
+            <div class="ios-card h-100 d-flex align-items-center gap-4 hover-lift">
+                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; font-size: 1.75rem;">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1 text-dark fw-bold">Advisors</h4>
+                    <p class="text-muted mb-0 small">Approve registrations and assign admin rights.</p>
+                </div>
+                <div class="ms-auto text-muted"><i class="bi bi-chevron-right"></i></div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+        <a href="{{ url_for('admin.activities_list') }}" class="text-decoration-none">
+            <div class="ios-card h-100 d-flex align-items-center gap-4 hover-lift">
+                <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; font-size: 1.75rem;">
+                    <i class="bi bi-calendar-event-fill"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1 text-dark fw-bold">Activities</h4>
+                    <p class="text-muted mb-0 small">Create, edit, or delete extracurricular activities.</p>
+                </div>
+                <div class="ms-auto text-muted"><i class="bi bi-chevron-right"></i></div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+        <a href="{{ url_for('admin.participations_list') }}" class="text-decoration-none">
+            <div class="ios-card h-100 d-flex align-items-center gap-4 hover-lift">
+                <div class="bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; font-size: 1.75rem;">
+                    <i class="bi bi-list-check"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1 text-dark fw-bold">Participations</h4>
+                    <p class="text-muted mb-0 small">Oversee all student join requests.</p>
+                </div>
+                <div class="ms-auto text-muted"><i class="bi bi-chevron-right"></i></div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<style>
+    .hover-lift { transition: transform 0.2s, box-shadow 0.2s; }
+    .hover-lift:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+</style>
 {% endblock %}
