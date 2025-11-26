@@ -376,3 +376,11 @@ def api_student_activity_history(user_id, student_id):
 
     return jsonify({"history": data}), 200
 
+@api.route("/participations/<int:pid>", methods=["DELETE"])
+@token_required
+def api_delete_participation(user_id, pid):
+    participation = Participation.query.get_or_404(pid)
+    db.session.delete(participation)
+    db.session.commit()
+    return jsonify({"message": "Participation deleted"})
+
