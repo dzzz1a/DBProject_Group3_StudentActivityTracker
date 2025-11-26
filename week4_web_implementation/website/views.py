@@ -145,3 +145,35 @@ def profile():
         return redirect(url_for("views.profile"))
 
     return render_template("profile.html")
+
+#search activity history
+@views.route("/activity-history", methods=["GET"])
+@login_required
+def activity_history():
+    # Students only
+    if getattr(current_user, "role_type", None) != "student":
+        if getattr(current_user, "role_type", None) == "advisor":
+            if getattr(current_user, "is_admin", False):
+                return redirect(url_for("admin.index"))
+            return redirect(url_for("advisor.dashboard"))
+        return redirect(url_for("auth.login"))
+
+    # Read search keyword from URL parameter
+    search_query = request.args.get("q", "")
+
+    # Join Participation + Activity for filtering
+    participations = (
+        Participation.query
+        .join(Activity)
+        .filter(
+            Participation.studentID == current_user.studentID,
+            Activity.activityName.ilike(f"%{search_query}%")
+        )
+        .all()
+    )
+
+    return render_template(
+        "activity_history.html",
+        participations=participations,
+        search_query=search_query
+    )
