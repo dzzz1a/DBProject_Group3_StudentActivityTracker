@@ -51,6 +51,8 @@ def token_required(f):
     return wrapper
 
 
+
+
 # ======================================================================
 # Auth
 # ======================================================================
@@ -90,6 +92,57 @@ def api_students_list(user_id):
         for s in students
     ]
     return jsonify(result)
+
+@api.route("/students", methods=["POST"])
+@token_required
+def api_create_student(user_id):
+    data = request.get_json() or {}
+
+    required_fields = ["firstName", "lastName", "email", "password"]
+    for field in required_fields:
+        if not data.get(field):
+            return jsonify({"error": f"{field} is required"}), 400
+
+    student = Students(
+        studentFirstName=data.get("firstName"),
+        studentLastName=data.get("lastName"),
+        studentYear=data.get("year"),
+        studentEmail=data.get("email"),
+        studentPassword=data.get("password"),  # consider hashing
+        studentAddress=data.get("address"),
+        phoneNumber=data.get("phone")
+    )
+
+    db.session.add(student)
+    db.session.commit()
+    return jsonify({"message": "Student created", "studentID": student.studentID}), 201
+
+
+@api.route("/students/<int:student_id>", methods=["PUT"])
+@token_required
+def api_update_student(user_id, student_id):
+    student = Students.query.get_or_404(student_id)
+    data = request.get_json() or {}
+
+    student.studentFirstName = data.get("firstName", student.studentFirstName)
+    student.studentLastName = data.get("lastName", student.studentLastName)
+    student.studentYear = data.get("year", student.studentYear)
+    student.studentEmail = data.get("email", student.studentEmail)
+    student.studentPassword = data.get("password", student.studentPassword)
+    student.studentAddress = data.get("address", student.studentAddress)
+    student.phoneNumber = data.get("phone", student.phoneNumber)
+
+    db.session.commit()
+    return jsonify({"message": "Student updated"})
+
+
+@api.route("/students/<int:student_id>", methods=["DELETE"])
+@token_required
+def api_delete_student(user_id, student_id):
+    student = Students.query.get_or_404(student_id)
+    db.session.delete(student)
+    db.session.commit()
+    return jsonify({"message": "Student deleted"})
 
 
 # ======================================================================
