@@ -294,11 +294,23 @@ def api_update_participation(user_id, pid):
 @api.route("/students/<int:student_id>/activities", methods=["GET"])
 @token_required
 def api_student_activity_history(user_id, student_id):
+    activity_name = request.args.get('name', type=str)
+    category = request.args.get('category', type=str)
+    status = request.args.get('status', type=str)
+
     participations = Participation.query.filter_by(studentID=student_id).all()
 
     data = []
     for p in participations:
         activity = Activity.query.get(p.activityID)
+        
+        if activity_name and activity_name.lower() not in activity.activityName.lower():
+            continue
+        if category and category.lower() not in activity.activityCategory.lower():
+            continue
+        if status and status.lower() != p.applicationStatus.lower():
+            continue
+
         data.append({
             "participationID": p.participationID,
             "activityID": activity.activityID,
