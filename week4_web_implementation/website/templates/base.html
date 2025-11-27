@@ -5,27 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>{% block title %}Activity Tracker{% endblock %}</title>
 
+    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+        /* 1. DEFINE COLORS */
         :root {
             --app-bg: #F5F5F7;
-            --sidebar-bg: rgba(255, 255, 255, 0.85);
+            --navbar-bg: rgba(255, 255, 255, 0.8); /* Translucent */
             --card-bg: #FFFFFF;
             --text-main: #1D1D1F;
             --text-muted: #86868B;
+            --border-light: rgba(0,0,0,0.05);
+            --input-bg: #F2F2F7;
+            
             --accent: #0071E3;
             --accent-hover: #0077ED;
             --danger: #FF3B30;
             --success: #34C759;
-            --border-light: rgba(0,0,0,0.05);
+            
             --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
             --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+            
             --radius-lg: 18px;
             --radius-md: 12px;
             --radius-pill: 99px;
+            
+            --nav-height: 64px;
         }
 
         body {
@@ -34,84 +44,102 @@
             color: var(--text-main);
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            margin: 0;
         }
 
         a { text-decoration: none; color: inherit; transition: 0.2s; }
-
-        .app-container { display: flex; min-height: 100vh; }
-
-        .sidebar {
-            width: 280px;
-            background: var(--sidebar-bg);
+        
+        /* --- TOP NAVIGATION BAR --- */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: var(--navbar-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-right: 1px solid var(--border-light);
-            padding: 2rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
+            border-bottom: 1px solid var(--border-light);
             z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            transition: background 0.3s;
+        }
+
+        .nav-container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .brand {
             font-weight: 700;
             font-size: 1.2rem;
-            margin-bottom: 2.5rem;
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-right: 3rem;
+            color: var(--text-main);
         }
 
-        .brand-logo {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-        }
-
-        .nav-category {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            margin-top: 1.5rem;
-        }
-
-        .nav-link {
+        .nav-links {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: var(--radius-md);
-            color: var(--text-main);
+            gap: 8px;
+        }
+
+        /* Navigation Links */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            color: var(--text-muted);
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.2s ease;
-            margin-bottom: 4px;
+        }
+        .nav-item i { font-size: 1rem; }
+        
+        .nav-item:hover {
+            background-color: var(--input-bg);
+            color: var(--text-main);
         }
 
-        .nav-link i { font-size: 1.1rem; color: var(--text-muted); }
-        .nav-link:hover { background: rgba(0,0,0,0.04); }
-
-        .nav-link.active {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 4px 12px rgba(0,113,227,0.3);
+        .nav-item.active {
+            background-color: var(--text-main);
+            color: var(--app-bg); /* Inverted text color for contrast */
         }
-        .nav-link.active i { color: white; }
 
+        /* Divider */
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background-color: var(--border-light);
+            margin: 0 10px;
+        }
+
+        /* --- MAIN CONTENT --- */
         .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 3rem;
-            max-width: 1600px;
+            padding-top: calc(var(--nav-height) + 2rem); /* Space for fixed header */
+            padding-bottom: 3rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
         }
 
+        /* Typography */
         h2 { font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
         h3 { font-weight: 600; font-size: 1.25rem; margin-bottom: 1rem; }
 
+        /* Cards */
         .ios-card {
             background: var(--card-bg);
             border-radius: var(--radius-lg);
@@ -123,129 +151,159 @@
         }
         .ios-card:hover { box-shadow: var(--shadow-md); }
 
-        .table-custom {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
+        /* Tables */
+        .table-custom { width: 100%; border-collapse: separate; border-spacing: 0; }
         .table-custom th {
-            text-align: left;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-light);
-            font-weight: 600;
+            text-align: left; font-size: 0.8rem; text-transform: uppercase;
+            color: var(--text-muted); padding: 1rem;
+            border-bottom: 1px solid var(--border-light); font-weight: 600;
         }
         .table-custom td {
-            padding: 1rem;
-            vertical-align: middle;
-            border-bottom: 1px solid var(--border-light);
-            font-size: 0.95rem;
+            padding: 1rem; vertical-align: middle;
+            border-bottom: 1px solid var(--border-light); font-size: 0.95rem;
+            color: var(--text-main);
         }
         .table-custom tr:last-child td { border-bottom: none; }
 
-        .btn-ios { border-radius: var(--radius-pill); padding: 8px 20px; font-weight: 500; font-size: 0.9rem; border: none; transition: 0.2s; }
+        /* Buttons & Badges */
+        .btn-ios {
+            border-radius: var(--radius-pill); padding: 8px 20px;
+            font-weight: 500; font-size: 0.9rem; border: none; transition: 0.2s;
+        }
         .btn-primary { background: var(--accent); color: white; }
         .btn-primary:hover { background: var(--accent-hover); transform: scale(1.02); }
-        .btn-secondary { background: rgba(0,0,0,0.05); color: var(--text-main); }
-        .btn-secondary:hover { background: rgba(0,0,0,0.1); }
-        .btn-danger { background: rgba(255,59,48,0.1); color: var(--danger); }
+        .btn-secondary { background: var(--input-bg); color: var(--text-main); }
+        .btn-secondary:hover { filter: brightness(0.95); }
+        .btn-danger { background: rgba(255, 59, 48, 0.1); color: var(--danger); }
         .btn-danger:hover { background: var(--danger); color: white; }
 
+        /* Forms */
         .form-label { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-main); }
         .form-control, .form-select {
-            background-color: #F2F2F7;
+            background-color: var(--input-bg);
             border: 1px solid transparent;
             border-radius: var(--radius-md);
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            transition: 0.2s;
+            padding: 0.75rem 1rem; font-size: 1rem;
+            color: var(--text-main); transition: 0.2s;
         }
         .form-control:focus, .form-select:focus {
-            background-color: white;
+            background-color: var(--card-bg);
             border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(0,113,227,0.15);
+            color: var(--text-main);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
         }
 
-        .badge-ios { padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
-        .bg-pending { background: rgba(255,149,0,0.1); color: #FF9500; }
-        .bg-approved { background: rgba(52,199,89,0.1); color: #34C759; }
-        .bg-rejected { background: rgba(255,59,48,0.1); color: #FF3B30; }
+        /* Status Badges */
+        .badge-ios {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .bg-pending { background: rgba(255, 149, 0, 0.1); color: #FF9500; }
+        .bg-approved { background: rgba(52, 199, 89, 0.1); color: #34C759; }
+        .bg-rejected { background: rgba(255, 59, 48, 0.1); color: #FF3B30; }
 
+
+        /* Toast */
         .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
         .toast-ios {
-            background: rgba(255,255,255,0.9);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 1rem;
             margin-top: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
             animation: slideIn 0.3s ease;
+            color: var(--text-main);
         }
-
         @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
+        /* Mobile Responsive */
+        @media (max-width: 992px) {
+            .nav-links span { display: none; } /* Hide text labels on tablet */
+            .nav-links { gap: 4px; }
+        }
         @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; padding: 1.5rem; }
+            .top-navbar { padding: 0 1rem; height: auto; padding-bottom: 1rem; padding-top: 0.5rem;}
+            .nav-container { flex-direction: column; gap: 10px; align-items: flex-start; }
+            .nav-links { width: 100%; overflow-x: auto; padding-bottom: 5px; } /* Horizontal scroll */
+            .main-content { padding-top: 140px; }
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    {% if current_user.is_authenticated %}
-    <nav class="sidebar">
-        <div class="brand">
-            <img src="{{ url_for('static', filename='img/logowebsite.png') }}" alt="Logo" class="brand-logo">
-            <span>Tracker</span>
-        </div>
-
-        <div class="nav-flex">
-            <a href="{{ url_for('views.dashboard') }}" class="nav-link {% if request.endpoint == 'views.dashboard' %}active{% endif %}">
-                <i class="bi bi-grid-fill"></i> Dashboard
-            </a>
+<!-- TOP NAVIGATION -->
+<header class="top-navbar">
+    <div class="nav-container">
+        <!-- LEFT: LOGO -->
+        <a href="/" class="brand">
+            <img src="{{ url_for('static', filename='img/logowebsite.png') }}" alt="Logo" width="30" height="30">
+            <span>Student Act Tracker</span>
+        </a>
+        {% if current_user.is_authenticated %}
+        <!-- CENTER: LINKS -->
+        <div class="nav-links">
             
-            <div class="nav-category">Menu</div>
-            <a href="{{ url_for('views.activities') }}" class="nav-link {% if 'activities' in request.endpoint and 'admin' not in request.endpoint %}active{% endif %}">
-                <i class="bi bi-calendar-event"></i> Activities
+            <!-- STUDENT LINKS -->
+            {% if current_user.role_type == 'student' %}
+            <a href="{{ url_for('views.dashboard') }}" class="nav-item {% if request.endpoint == 'views.dashboard' %}active{% endif %}">
+                <i class="bi bi-grid-fill"></i> <span>Dashboard</span>
             </a>
-            
-            {% if current_user.advisorID %}
-            <div class="nav-category">Advisor</div>
-            <a href="{{ url_for('advisor.dashboard') }}" class="nav-link {% if 'advisor.dashboard' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-clipboard-data"></i> Manage Requests
+            <a href="{{ url_for('views.activities') }}" class="nav-item {% if 'activities' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-calendar-event"></i> <span>Activities</span>
             </a>
-            <a href="{{ url_for('advisor.profile') }}" class="nav-link {% if 'advisor.profile' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-person-badge"></i> My Profile
+            <a href="{{ url_for('views.activity_history') }}" class="nav-item {% if 'activity_history' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-clock-history"></i> <span>History</span>
+            </a>
+            <a href="{{ url_for('views.profile') }}" class="nav-item {% if 'views.profile' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-person-circle"></i> <span>Profile</span>
             </a>
             {% endif %}
 
+            <!-- ADVISOR LINKS -->
+            {% if current_user.role_type == 'advisor' %}
+            <a href="{{ url_for('advisor.dashboard') }}" class="nav-item {% if 'advisor.dashboard' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-clipboard-data"></i> <span>Requests</span>
+            </a>
+            <a href="{{ url_for('advisor.profile') }}" class="nav-item {% if 'advisor.profile' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-person-badge"></i> <span>Profile</span>
+            </a>
+            {% endif %}
+
+            <!-- ADMIN LINKS -->
             {% if current_user.is_admin %}
-            <div class="nav-category">Administration</div>
-            <a href="{{ url_for('admin.index') }}" class="nav-link {% if 'admin' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-shield-lock"></i> Admin Panel
+            <div class="nav-divider"></div>
+            <a href="{{ url_for('admin.index') }}" class="nav-item {% if 'admin' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-shield-lock"></i> <span>Admin</span>
             </a>
             {% endif %}
 
-            <div class="nav-category">Account</div>
-            <a href="{{ url_for('views.profile') }}" class="nav-link {% if 'profile' in request.endpoint and 'advisor' not in request.endpoint %}active{% endif %}">
-                <i class="bi bi-person-circle"></i> Profile
-            </a>
-            <a href="{{ url_for('auth.logout') }}" class="nav-link text-danger">
-                <i class="bi bi-box-arrow-right"></i> Logout
+        </div>
+
+        <!-- RIGHT: UTILITIES -->
+        <div class="nav-links ms-auto">
+            <a href="{{ url_for('auth.logout') }}" class="nav-item text-danger">
+                <i class="bi bi-box-arrow-right"></i>
             </a>
         </div>
-    </nav>
-    {% endif %}
+        {% else %}
+        <!-- GUEST LINKS -->
+        <div class="nav-links ms-auto">
+             <a href="{{ url_for('auth.login') }}" class="nav-item">Sign In</a>
+             <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-ios text-white">Get Started</a>
+        </div>
+        {% endif %}
+    </div>
+</header>
 
-    <main class="main-content">
-        {% block content %}{% endblock %}
-    </main>
-</div>
+<main class="main-content">
+    {% block content %}{% endblock %}
+</main>
 
+<!-- TOASTS -->
 <div class="toast-container">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -261,6 +319,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // Auto-hide toasts
     setTimeout(() => {
         const toasts = document.querySelectorAll('.toast-ios');
         toasts.forEach(t => t.style.display = 'none');

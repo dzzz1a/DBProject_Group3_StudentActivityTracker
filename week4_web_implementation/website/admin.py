@@ -215,14 +215,47 @@ def participations_list():
     return render_template("admin_participations.html", participations=participations)
 
 
-@admin.route("/participations/update/<int:id>", methods=["POST"])
+@admin.route('/participations/update/<int:id>', methods=['POST'])
 @login_required
-@admin_required
 def participations_update(id):
-    p = Participation.query.get_or_404(id)
-    p.applicationStatus = request.form.get("status")
-    p.advisorFeedback = request.form.get("feedback")
-    db.session.commit()
+    # Security Check
+    if not getattr(current_user, "is_admin", False):
+         return redirect(url_for('views.dashboard'))
 
-    flash("Participation updated.", "success")
-    return redirect(url_for("admin.participations_list"))
+    p = Participation.query.get_or_404(id)
+    
+    # Get data from the form
+    new_status = request.form.get('status')
+    new_feedback = request.form.get('feedback')
+
+    # Update status if provided
+    if new_status:
+        p.applicationStatus = new_status
+    
+    # Update feedback (checks for None so empty strings overwrite old feedback)
+    if new_feedback is not None:
+        p.advisorFeedback = new_feedback
+
+    db.session.commit()
+    flash("Participation request updated successfully.", "success")
+    return redirect(url_for('admin.participations_list'))
+
+
+@admin.route('/participations/delete/<int:id>')
+@login_required
+def participations_delete(id):
+    # Security Check
+    if not getattr(current_user, "is_admin", False):
+         return redirect(url_for('views.dashboard'))
+
+    p = Participation.query.get_or_404(id)
+    
+    try:
+        db.session.delete(p)
+        db.session.commit()
+        flash("Participation request deleted permanently.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash("Error deleting request.", "danger")
+    
+    return redirect(url_for('admin.participations_list'))

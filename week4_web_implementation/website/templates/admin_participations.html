@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="mb-4">
-    <h2>All Participation Requests</h2>
-    <p class="text-muted">Override status or view feedback for all students.</p>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Manage Participations</h2>
+        <p class="text-muted">Review, approve, or reject student activity requests.</p>
+    </div>
 </div>
 
 <div class="ios-card p-0 overflow-hidden">
@@ -10,35 +13,87 @@
         <table class="table-custom">
             <thead>
                 <tr>
-                    <th class="ps-4">Student</th>
-                    <th>Activity</th>
-                    <th>Status</th>
-                    <th>Update</th>
+                    <th class="ps-4" style="width: 25%;">Student</th>
+                    <th style="width: 20%;">Activity</th>
+                    <th style="width: 15%;">Current Status</th>
+                    <th style="width: 40%;" class="text-end pe-4">Actions / Feedback</th>
                 </tr>
             </thead>
             <tbody>
             {% for p in participations %}
                 <tr>
+                    <!-- Student Column -->
                     <td class="ps-4">
-                        <div class="fw-bold">{{ p.student.studentFirstName }} {{ p.student.studentLastName }}</div>
-                        <div class="small text-muted">ID: {{ p.studentID }}</div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" 
+                                 style="width: 40px; height: 40px; font-weight: bold;">
+                                {{ p.student.studentFirstName[0] }}{{ p.student.studentLastName[0] }}
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark">
+                                    {{ p.student.studentFirstName }} {{ p.student.studentLastName }}
+                                </div>
+                                <div class="small text-muted">ID: {{ p.studentID }}</div>
+                            </div>
+                        </div>
                     </td>
-                    <td>{{ p.activity.activityName if p.activity else '-' }}</td>
+
+                    <!-- Activity Column -->
                     <td>
-                         <span class="badge-ios {% if p.applicationStatus=='Approved' %}bg-approved{% elif p.applicationStatus=='Rejected' %}bg-rejected{% else %}bg-pending{% endif %}">
+                        <div class="fw-medium text-dark">{{ p.activity.activityName if p.activity else '-' }}</div>
+                        <div class="small text-muted">{{ p.activity.activityCategory if p.activity else '' }}</div>
+                    </td>
+
+                    <!-- Status Column -->
+                    <td>
+                        <span class="badge-ios 
+                            {% if p.applicationStatus == 'Approved' %}bg-approved
+                            {% elif p.applicationStatus == 'Rejected' %}bg-rejected
+                            {% else %}bg-pending{% endif %}">
                             {{ p.applicationStatus }}
                         </span>
                     </td>
-                    <td>
-                        <form method="POST" action="{{ url_for('admin.participations_update', id=p.participationID) }}" class="d-flex gap-2">
-                            <select name="status" class="form-select form-select-sm w-auto">
+
+                    <!-- Actions Column -->
+                    <td class="text-end pe-4">
+                        <form method="POST" action="{{ url_for('admin.participations_update', id=p.participationID) }}" class="d-flex justify-content-end align-items-center gap-2">
+                            
+                            <!-- Status Select -->
+                            <select name="status" class="form-select form-select-sm" style="width: 110px; border-radius: 8px;">
                                 <option value="Pending" {% if p.applicationStatus == 'Pending' %}selected{% endif %}>Pending</option>
-                                <option value="Approved" {% if p.applicationStatus == 'Approved' %}selected{% endif %}>Approved</option>
-                                <option value="Rejected" {% if p.applicationStatus == 'Rejected' %}selected{% endif %}>Rejected</option>
+                                <option value="Approved" {% if p.applicationStatus == 'Approved' %}selected{% endif %}>Approve</option>
+                                <option value="Rejected" {% if p.applicationStatus == 'Rejected' %}selected{% endif %}>Reject</option>
                             </select>
-                            <input name="feedback" class="form-control form-control-sm" placeholder="Feedback..." value="{{ p.advisorFeedback or '' }}">
-                            <button class="btn btn-sm btn-primary btn-ios">Save</button>
+
+                            <!-- Feedback Input -->
+                            <input name="feedback" 
+                                   class="form-control form-control-sm" 
+                                   style="max-width: 180px; border-radius: 8px;"
+                                   placeholder="Add feedback..." 
+                                   value="{{ p.advisorFeedback or '' }}">
+
+                            <!-- Save Button -->
+                            <button class="btn btn-sm btn-primary btn-ios px-3" title="Save Changes">
+                                <i class="bi bi-check-lg"></i>
+                            </button>
+
+                            <!-- Delete Button -->
+                            <div class="vr mx-1 text-muted opacity-25"></div>
+                            <a href="{{ url_for('admin.participations_delete', id=p.participationID) }}" 
+                               class="btn btn-sm btn-light text-danger btn-ios" 
+                               style="background: rgba(255, 59, 48, 0.1); border:none;"
+                               onclick="return confirm('Are you sure you want to permanently delete this request?');"
+                               title="Delete Request">
+                                <i class="bi bi-trash"></i>
+                            </a>
                         </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox display-6 mb-3 d-block" style="opacity: 0.3;"></i>
+                        No participation requests found.
                     </td>
                 </tr>
             {% endfor %}
@@ -46,4 +101,5 @@
         </table>
     </div>
 </div>
+
 {% endblock %}
