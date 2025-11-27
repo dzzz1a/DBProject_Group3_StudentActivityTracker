@@ -1,15 +1,16 @@
--- CREATE
-INSERT INTO Advisor (advisorName, advisorEmail, advisorRole, officeLocation, availableSchedule, advisorPassword)
-VALUES ('Rani M.', 'rani@campus.ac.id', 'Activity Supervisor', 'Building B-201', 'Mon–Fri 10:00–12:00', 'securepass');
+-- C: CREATE (Insert a new Advisor record)
+INSERT INTO advisor (advisorName, advisorEmail, advisorRole, advisorPassword, availableSchedule)
+VALUES ('Dr. Patel', 'patel.d@school.edu', 'Department Chair', 'hashed_pw_02', 'Office C-212 / Fri 9am-12pm');
 
--- READ
-SELECT * FROM Advisor;
+-- R: READ (Select all Advisor details)
+SELECT advisorID, advisorName, advisorEmail, advisorRole, availableSchedule
+FROM advisor;
 
--- UPDATE
-UPDATE Advisor
-SET officeLocation = 'Building B-305'
-WHERE advisorID = 1;
+-- U: UPDATE (Modify an existing Advisor's role and schedule)
+UPDATE advisor
+SET advisorRole = 'Adjunct Professor', availableSchedule = 'Zoom meeting by appointment'
+WHERE advisorID = 106;
 
--- DELETE
-DELETE FROM Advisor
-WHERE advisorID = 1;
+-- D: DELETE (Remove an Advisor record)
+DELETE FROM advisor
+WHERE advisorID = 106;
