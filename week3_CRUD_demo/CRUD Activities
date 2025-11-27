@@ -1,15 +1,16 @@
--- CREATE
-INSERT INTO Extracurricular (activityName, activityCategory, activityLocation, activityStartDate, activityEndDate, activityFrequency, activityDetails)
-VALUES ('Basketball Club', 'Sports', 'Campus Gym', '2025-01-10', '2025-06-20', 'Weekly', 'Team practices and competitions');
+-- C: CREATE (Insert a new Activity record)
+INSERT INTO activity (activityName, activityCategory, activityLocation, activityStartDate, activityDetails, advisorID)
+VALUES ('Data Science Club', 'Academic', 'Room 303', '2025-10-01', 'Weekly meeting to discuss machine learning.', 105);
 
--- READ
-SELECT * FROM Extracurricular;
+-- R: READ (Select all Activity details)
+SELECT activityID, activityName, activityCategory, activityLocation, activityStartDate
+FROM activity;
 
--- UPDATE
-UPDATE Extracurricular
-SET activityLocation = 'Main Sports Hall'
-WHERE activityID = 1;
+-- U: UPDATE (Modify an existing Activity's location and date)
+UPDATE activity
+SET activityLocation = 'Main Lecture Hall', activityEndDate = '2026-03-30'
+WHERE activityID = 205;
 
--- DELETE
-DELETE FROM Extracurricular
-WHERE activityID = 1;
+-- D: DELETE (Remove an Activity record)
+DELETE FROM activity
+WHERE activityID = 205;
