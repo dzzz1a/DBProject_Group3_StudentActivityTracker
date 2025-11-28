@@ -1,16 +1,16 @@
 -- C: CREATE (Insert a new Activity record)
-INSERT INTO activity (activityName, activityCategory, activityLocation, activityStartDate, activityDetails, advisorID)
-VALUES ('Data Science Club', 'Academic', 'Room 303', '2025-10-01', 'Weekly meeting to discuss machine learning.', 105);
+INSERT INTO Activity (activityName, activityCategory, activityLocation, activityDetails, activityStartDate, activityEndDate, activityFrequency)
+VALUES ('AI Workshop', 'Academic', 'Room 101', 'Introduction to Python for AI.', '2025-11-01', '2025-11-02', 'One-time');
 
 -- R: READ (Select all Activity details)
-SELECT activityID, activityName, activityCategory, activityLocation, activityStartDate
-FROM activity;
+SELECT activityID, activityName, activityCategory, activityLocation, activityStartDate, activityEndDate
+FROM Activity;
 
 -- U: UPDATE (Modify an existing Activity's location and date)
-UPDATE activity
-SET activityLocation = 'Main Lecture Hall', activityEndDate = '2026-03-30'
-WHERE activityID = 205;
+UPDATE Activity
+SET activityLocation = 'Virtual Zoom Link', activityEndDate = '2025-11-03'
+WHERE activityID = 10;
 
 -- D: DELETE (Remove an Activity record)
-DELETE FROM activity
-WHERE activityID = 205;
+DELETE FROM Activity
+WHERE activityID = 10;
