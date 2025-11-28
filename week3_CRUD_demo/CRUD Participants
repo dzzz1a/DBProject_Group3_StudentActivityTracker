@@ -1,16 +1,17 @@
--- C: CREATE (Insert a new Participation request)
-INSERT INTO participation (studentID, activityID, dateApplied, applicationStatus)
-VALUES (6, 206, DATETIME('now'), 'Pending');
+-- C: CREATE (Student creates a Participation request)
+INSERT INTO Participation (studentID, activityID, advisorID, applicationStatus, dateApplied)
+VALUES (202501, 10, 5, 'Pending', '2025-11-28');
 
--- R: READ (Select all Participation details, including status)
-SELECT participationID, studentID, activityID, applicationStatus, dateApplied
-FROM participation;
+-- R: READ (Select all Participation requests for a specific student)
+SELECT participationID, studentID, activityID, applicationStatus, advisorFeedback
+FROM Participation
+WHERE studentID = 202501;
 
--- U: UPDATE (Advisor changes the application status and adds feedback)
-UPDATE participation
-SET applicationStatus = 'Approved', approvalDate = DATETIME('now'), advisorFeedback = 'Met all prerequisite criteria.'
-WHERE participationID = 306;
+-- U: UPDATE (Advisor approves request and adds feedback)
+UPDATE Participation
+SET applicationStatus = 'Approved', advisorFeedback = 'Good luck with the project!'
+WHERE participationID = 50;
 
--- D: DELETE (Remove a Participation record)
-DELETE FROM participation
-WHERE participationID = 306;
+-- D: DELETE (Remove a Participation request)
+DELETE FROM Participation
+WHERE participationID = 50;
