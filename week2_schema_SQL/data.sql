@@ -7,10 +7,7 @@ CREATE TABLE advisor (
   availableSchedule VARCHAR(100),
   PRIMARY KEY (advisorID)
 );
-
 -- --------------------------------------------------------
-
-
 CREATE TABLE students (
   studentID INT(11) NOT NULL AUTO_INCREMENT,
   studentFirstName VARCHAR(15),
@@ -23,18 +20,6 @@ CREATE TABLE students (
   PRIMARY KEY (studentID)
 );
 -- --------------------------------------------------------
-
-CREATE TABLE joins (
-  joinsID INT(11) NOT NULL AUTO_INCREMENT,
-  studentID INT(11),
-  activityID INT(11),
-  PRIMARY KEY (joinsID),
-  FOREIGN KEY (studentID) REFERENCES students(studentID),
-  FOREIGN KEY (activityID) REFERENCES activity(activityID)
-);
-
--- --------------------------------------------------------
-
 CREATE TABLE activity (
   activityID INT(11) NOT NULL AUTO_INCREMENT,
   activityName VARCHAR(30),
@@ -48,10 +33,16 @@ CREATE TABLE activity (
   PRIMARY KEY (activityID),
   FOREIGN KEY (advisorID) REFERENCES advisor(advisorID)
 );
-
 -- --------------------------------------------------------
-
-
+CREATE TABLE joins (
+  joinsID INT(11) NOT NULL AUTO_INCREMENT,
+  studentID INT(11),
+  activityID INT(11),
+  PRIMARY KEY (joinsID),
+  FOREIGN KEY (studentID) REFERENCES students(studentID),
+  FOREIGN KEY (activityID) REFERENCES activity(activityID)
+);
+-- --------------------------------------------------------
 CREATE TABLE participation (
   participationID INT(11) NOT NULL AUTO_INCREMENT,
   dateApplied DATE,
