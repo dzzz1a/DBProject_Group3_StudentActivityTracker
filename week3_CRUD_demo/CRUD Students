@@ -1,16 +1,16 @@
 -- C: CREATE (Insert a new Student record)
-INSERT INTO students (studentFirstName, studentLastName, studentYear, studentEmail, studentPassword)
-VALUES ('Emily', 'Jones', 'First Year', 'emily.j@school.edu', 'hashed_pw_01');
+INSERT INTO Students (studentFirstName, studentLastName, studentEmail, studentYear, studentAddress, phoneNumber, studentPassword)
+VALUES ('Michael', 'Jordan', 'm.jordan@uni.edu', 2024, '123 Hoop St', 1234567890, 'pbkdf2:sha256:50000$xyz...');
 
--- R: READ (Select all essential Student details)
+-- R: READ (Select all Student details)
 SELECT studentID, studentFirstName, studentLastName, studentEmail, studentYear
-FROM students;
+FROM Students;
 
--- U: UPDATE (Modify an existing Student's contact details)
-UPDATE students
-SET studentAddress = '100 University Ave', phoneNumber = '555-1234'
-WHERE studentID = 5;
+-- U: UPDATE (Modify a Student's address and phone number)
+UPDATE Students
+SET studentAddress = '456 New Dorm Ave', phoneNumber = 9876543210
+WHERE studentID = 202501;
 
 -- D: DELETE (Remove a Student record)
-DELETE FROM students
-WHERE studentID = 5;
+DELETE FROM Students
+WHERE studentID = 202501;
