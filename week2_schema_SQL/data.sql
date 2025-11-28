@@ -1,6 +1,3 @@
-
-
-
 CREATE TABLE advisor (
   advisorID INT(11) NOT NULL AUTO_INCREMENT,
   advisorName VARCHAR(20),
