@@ -1,4 +1,4 @@
-# 📄 Project Overview
+# Project Overview
 
 The Student Activity Tracker System is designed to provide a structured, database-based solution for managing student extracurricular activities. The system allows advisors to register activities and record student participation, while students can view available activities, application status, and their personal activity history.
 
@@ -6,7 +6,7 @@ The application is built using Flask with SQLAlchemy ORM and a SQLite database, 
 
 ---
 
-## 👥 Group Members
+##  Group Members
 
 - **Adam Rizky** (24/536885/PA/22777)
 - **Panji Merah Balakosa** (24/532826/PA/22541)
@@ -14,7 +14,7 @@ The application is built using Flask with SQLAlchemy ORM and a SQLite database, 
 
 ---
 
-## ⚙️ Prerequisites
+##  Prerequisites
 
 Before you begin, ensure that the following are installed:
 
@@ -24,7 +24,7 @@ Before you begin, ensure that the following are installed:
 
 ---
 
-## 🚀 Setup Instructions
+##  Setup Instructions
 
 ### 1. Clone the Repository
 
