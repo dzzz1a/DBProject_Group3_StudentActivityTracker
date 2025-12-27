@@ -31,8 +31,35 @@ Before you begin, ensure that the following are installed:
 ```bash
 git clone https://github.com/your-username/student-activity-tracker.git
 cd student-activity-tracker
----
+```
 
 ### 2. Set Up the Python Virtual Environment
+```bash
+python -m venv venv
+```
+Activate the virtual environment:
+```bash
+venv\Scripts\activate
+```
 
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+### 4. Initialize the Database
+```bash
+flask db init
+flask db migrate
+flask db upgrade
+```
+
+### 5. Run the Application
+```bash
+flask run
+```
+
+The application will be available at:
+```cpp
+http://127.0.0.1:5000
+```
 
