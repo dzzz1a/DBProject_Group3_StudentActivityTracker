@@ -31,4 +31,8 @@ Before you begin, ensure that the following are installed:
 ```bash
 git clone https://github.com/your-username/student-activity-tracker.git
 cd student-activity-tracker
+---
+
+### 2. Set Up the Python Virtual Environment
+
 
