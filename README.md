@@ -1,13 +1,3 @@
-
-❌ The code block is never closed properly.
-
----
-
-## ✅ FIXED VERSION (COPY THIS ENTIRE BLOCK)
-
-👉 **Delete everything in your `README.md` and paste this instead**
-
-```md
 # 📄 Project Overview
 
 The Student Activity Tracker System is designed to provide a structured, database-based solution for managing student extracurricular activities. The system allows advisors to register activities and record student participation, while students can view available activities, application status, and their personal activity history.
