@@ -4,6 +4,8 @@ The Student Activity Tracker System is designed to provide a structured, databas
 
 The application is built using Flask with SQLAlchemy ORM and a SQLite database, following proper database normalization up to Third Normal Form (3NF).
 
+You may visit the deployed website at: <https://dz1a.pythonanywhere.com>
+
 ---
 
 ##  Group Members
@@ -63,6 +65,6 @@ The application will be available at:
 http://127.0.0.1:5000
 ```
 
-For easier use, you may visit the deployed website at: <https://dz1a.pythonanywhere.com>
+
 
 
