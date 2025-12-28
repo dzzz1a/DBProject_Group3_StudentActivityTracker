@@ -63,9 +63,6 @@ The application will be available at:
 http://127.0.0.1:5000
 ```
 
-For easier use, you may visit the deployed website at:
-```cpp
-https://dz1a.pythonanywhere.com
-```
+For easier use, you may visit the deployed website at: <https://dz1a.pythonanywhere.com>
 
 
