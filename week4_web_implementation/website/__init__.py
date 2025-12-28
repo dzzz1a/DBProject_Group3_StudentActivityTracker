@@ -6,7 +6,7 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "super-secret-key-change-me"
+    app.config["SECRET_KEY"] = "AkuCintaAris"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///student_activities.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
